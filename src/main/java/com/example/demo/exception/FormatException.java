@@ -1,8 +1,9 @@
 package com.example.demo.exception;
 
 public class FormatException extends RuntimeException {
-    private HTTP httpCode;
-    public FormatException(String msg, HTTP httpCode) {
+    private final HTTP httpCode;
+
+    public FormatException(final String msg, final HTTP httpCode) {
         super(msg);
         this.httpCode = httpCode;
     }
