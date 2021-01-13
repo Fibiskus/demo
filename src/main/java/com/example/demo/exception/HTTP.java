@@ -5,7 +5,7 @@ public enum HTTP {
 
     private final int code;
 
-    HTTP(int code) {
+    HTTP(final int code) {
         this.code = code;
     }
 

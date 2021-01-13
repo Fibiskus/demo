@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private UserToUserDTOMapper userMapper;
     @Autowired
     private GameToGameDTOMapper gameMapper;
+
     @Override
     public UserDTO getUserById(final Long id) {
         return userMapper.toDto(userRepository.getUserById(id));
@@ -36,37 +37,41 @@ public class UserServiceImpl implements UserService {
                 .map(e -> userMapper.toDto(e))
                 .collect(Collectors.toList());
     }
+
     @Override
-    public Long getSummaryPrice(final Long userId){
-        if(userId == null){
+    public Long getSummaryPrice(final Long userId) {
+        if (userId == null) {
             throw new FormatException("User should have an id ", HTTP.HTTP_400);
         }
-    return userRepository.getSummaryPrice(userRepository.getUserById(userId));
+        return userRepository.getSummaryPrice(userRepository.getUserById(userId));
     }
+
     @Override
     public UserDTO createUser(final UserDTO userDTO) {
 
-        if(userDTO.getId() != null){
+        if (userDTO.getId() != null) {
             throw new FormatException("User shouldn't have an id ", HTTP.HTTP_400);
         }
 
         return userMapper.toDto(userRepository.createUser(userMapper.toEntity(userDTO)));
     }
+
     @Override
     public UserDTO addGameToUser(final Long userId, final Long gameId) {
 
-        if(userId == null){
+        if (userId == null) {
             throw new FormatException("User should have an id ", HTTP.HTTP_400);
         }
-        if(gameId == null){
+        if (gameId == null) {
             throw new FormatException("Game should have an id ", HTTP.HTTP_400);
         }
-        return userMapper.toDto(userRepository.addGameToUser(userRepository.getUserById(userId),gameRepository.getGameById(gameId)));
+        return userMapper.toDto(userRepository.addGameToUser(userRepository.getUserById(userId), gameRepository.getGameById(gameId)));
     }
+
     @Override
     public UserDTO updateUser(final UserDTO userDTO) {
 
-        if(userDTO.getId() == null){
+        if (userDTO.getId() == null) {
             throw new FormatException("User have an id ", HTTP.HTTP_400);
         }
 

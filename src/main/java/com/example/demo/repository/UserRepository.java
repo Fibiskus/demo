@@ -44,65 +44,66 @@ public class UserRepository {
             return user.getGames().stream().map(g -> gameRepository.getCost(g)).reduce(Long::sum).orElse(0L);
         }
     }
-        public User createUser ( final User user){
-            if (user.getId() != null) {
-                throw new FormatException("User shouldn't have an id ", HTTP.HTTP_400);
-            }
 
-            ++lastId;
-            user.setId(lastId);
-
-            savedUsers.add(user);
-
-            return user;
+    public User createUser(final User user) {
+        if (user.getId() != null) {
+            throw new FormatException("User shouldn't have an id ", HTTP.HTTP_400);
         }
 
-        public User addGameToUser ( final User user, final Game game){
-            if (user.getGames() != null) {
-                if (user.getGames().stream().filter(g -> g.getId().equals(game.getId())).findFirst().orElse(null) != null) {
-                    throw new FormatException("User already have this game ", HTTP.HTTP_400);
-                }
+        ++lastId;
+        user.setId(lastId);
+
+        savedUsers.add(user);
+
+        return user;
+    }
+
+    public User addGameToUser(final User user, final Game game) {
+        if (user.getGames() != null) {
+            if (user.getGames().stream().filter(g -> g.getId().equals(game.getId())).findFirst().orElse(null) != null) {
+                throw new FormatException("User already have this game ", HTTP.HTTP_400);
             }
-            if (user.getGames() != null) {
-                user.getGames().add(game);
-            } else {
-                user.setGames(new ArrayList<>(Collections.singletonList(game)));
-            }
-            updateUser(user);
-            return user;
+        }
+        if (user.getGames() != null) {
+            user.getGames().add(game);
+        } else {
+            user.setGames(new ArrayList<>(Collections.singletonList(game)));
+        }
+        updateUser(user);
+        return user;
+    }
+
+    public User updateUser(final User user) {
+        if (user.getId() == null) {
+            throw new FormatException("User should have an id ", HTTP.HTTP_400);
         }
 
-        public User updateUser ( final User user){
-            if (user.getId() == null) {
-                throw new FormatException("User should have an id ", HTTP.HTTP_400);
-            }
+        final User savedUser = getUserById(user.getId());
 
-            final User savedUser = getUserById(user.getId());
-
-            savedUser.setGames(user.getGames());
-            savedUser.setAge(user.getAge());
-            savedUser.setLastName(user.getLastName());
-            savedUser.setFirstName(user.getFirstName());
-            savedUser.setEmail(user.getEmail());
+        savedUser.setGames(user.getGames());
+        savedUser.setAge(user.getAge());
+        savedUser.setLastName(user.getLastName());
+        savedUser.setFirstName(user.getFirstName());
+        savedUser.setEmail(user.getEmail());
 
 
-            return savedUser;
+        return savedUser;
+    }
+
+    public void deleteUserById(final Long id) {
+        if (id == null) {
+            throw new FormatException("Id isn't specified", HTTP.HTTP_400);
         }
 
-        public void deleteUserById ( final Long id){
-            if (id == null) {
-                throw new FormatException("Id isn't specified", HTTP.HTTP_400);
-            }
+        savedUsers.stream()
+                .filter(e -> e.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new FormatException("User with id: " + id + " not found ", HTTP.HTTP_400));
 
-            savedUsers.stream()
-                    .filter(e -> e.getId().equals(id))
-                    .findFirst()
-                    .orElseThrow(() -> new FormatException("User with id: " + id + " not found ", HTTP.HTTP_400));
-
-            savedUsers = savedUsers.stream()
-                    .filter(e -> !e.getId().equals(id))
-                    .collect(Collectors.toList());
-
-        }
+        savedUsers = savedUsers.stream()
+                .filter(e -> !e.getId().equals(id))
+                .collect(Collectors.toList());
 
     }
+
+}

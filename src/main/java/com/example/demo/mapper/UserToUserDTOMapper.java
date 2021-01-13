@@ -15,7 +15,8 @@ import java.util.List;
 public class UserToUserDTOMapper {
     @Autowired
     private GameToGameDTOMapper gameToGameDTOMapper;
-    public User toEntity(final UserDTO userDTO){
+
+    public User toEntity(final UserDTO userDTO) {
         final User user = new User();
 
         user.setId(userDTO.getId());
@@ -36,7 +37,7 @@ public class UserToUserDTOMapper {
         return user;
     }
 
-    public UserDTO toDto(final User user){
+    public UserDTO toDto(final User user) {
         final UserDTO userDTO = new UserDTO();
 
         userDTO.setId(user.getId());
